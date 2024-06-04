@@ -14,11 +14,11 @@
  * linked in the slides.
  */
 
-function App() {
+// function App() {
 
-  return (
-    <h1>Start here</h1>
-  )
-}
+//   return (
+//     <h1>Start here</h1>
+//   )
+// }
 
-export default App
+// export default App
