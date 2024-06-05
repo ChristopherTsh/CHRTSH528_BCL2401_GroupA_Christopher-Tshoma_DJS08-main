@@ -11,7 +11,7 @@ export default function App() {
           #VANLive
         </Link>
         <nav>
-          <Link t0="/about">About</Link>
+          <Link to="/About">About</Link>
         </nav>
       </header>
 

@@ -1,5 +1,5 @@
 import React from "react"
-import bgImg from "../src/images/about-hero.png"
+import bgImg from "../images/about-hero.png"
 import { Link } from "react-router-dom"
 
 
