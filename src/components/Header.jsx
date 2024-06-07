@@ -8,9 +8,9 @@ export default function Header() {
     color: "#161616",
   };
 
-  function fakeLogOut() {
-    localStorage.removeItem("loggedin");
-  }
+  // function fakeLogOut() {
+  //   localStorage.removeItem("loggedin");
+  // }
   return (
     <header>
       <Link className="site-logo" to="/">
@@ -19,19 +19,19 @@ export default function Header() {
       <nav>
         <NavLink
           to="/host"
-          className={({ isActive }) => (isActive ? "active-link" : null)}
+          className={({ isActive }) => isActive ? activeStyles : null}
         >
           Host
         </NavLink>
         <NavLink
           to="/about"
-          className={({ isActive }) => (isActive ? "active-link" : null)}
+          className={({ isActive }) => isActive ? activeStyles : null}
         >
           About
         </NavLink>
         <NavLink
           to="/vans"
-          className={({ isActive }) => (isActive ? "active-link" : null)}
+          className={({ isActive }) => isActive ? activeStyles : null}
         >
           Vans
         </NavLink>
