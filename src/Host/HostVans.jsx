@@ -1,16 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, defer, useLoaderData, Await  } from "react-router-dom";
+import { getHostVans } from "../../api/firebase"
 
+
+export function loader() {
+  return defer({ vans: getHostVans() })
+}
 export default function HostVans() {
-  const [vans, setVans] = React.useState([])
-
-    React.useEffect(() => {
-        fetch("/api/host/vans")
-            .then(res => res.json())
-            .then(data => setVans(data.vans))
-    }, [])
+  const loaderData= useLoaderData()
 
 
+  function renderVanElements(vans) {
     const hostVansEls = vans.map(van => (
       <Link
           to={van.id}
@@ -27,21 +27,24 @@ export default function HostVans() {
       </Link>
   ))
 
+  return(
+    <div className="host-vans-container">
+      <section>
+      {hostVansEls}
+      </section>
+    </div>
+
+  )
+}
+
   return (
       <section>
           <h1 className="host-vans-title">Your listed vans</h1>
-          <div className="host-vans-list">
-              {
-                  vans.length > 0 ? (
-                      <section>
-                          {hostVansEls}
-                      </section>
-
-                  ) : (
-                          <h2>Loading...</h2>
-                      )
-              }
-          </div>
+          <React.Suspense fallback={<h2>Loading vans...</h2>}>
+          <Await resolve={loaderData.vans}>
+                    {renderVanElements}
+                </Await>
+                </React.Suspense>
       </section>
   )
 }
