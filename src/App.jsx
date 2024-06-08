@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import About from "./page/About";
 import Home from "./page/Home";
 import Vans from "./page/Vans";
@@ -12,40 +12,71 @@ import HostVansDetails from "./Host/HostVansDetails";
 import HostVanInfo from "./Host/HostVanInfo";
 import HostVanPhotos from "./Host/HostVanPhotos";
 import HostVanPricing from "./Host/HostVanPricing";
+import NotFound from "./page/NotFound";
+import Login, { action as loginAction } from "./page/Login";
 import Layout from "./components/Layout";
 import HostLayout from "./components/HostLayout";
 import Error from "./components/Error";
 import AuthRequired from "./components/AuthRequired";
 
+import "./server";
 
-import './server'
-
-export default function App() {
-  return (
-    <BrowserRouter>
-        <Routes>
-        <Route path="/" element={<Layout />} >
+const router = createBrowserRouter(createRoutesFromElements(
+          <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
-          <Route path="vans" element={<Vans />} >
-            <Route path=":id" element={<VanDetail />} />
-          </Route>
-
-          <Route path="host" element={<HostLayout />} >
-            <Route index element={<Dashboard />} />
+          <Route path="login" 
+          element={<Login />} 
+          action={loginAction} 
+          />
+          <Route
+            path="vans"
+            element={<Vans />}
+            errorElement={<Error />}
+            loader={vansLoader}
+          >
+            <Route
+              path="vans:id"
+              element={<VanDetail />}
+              errorElement={<Error />}
+              loader={vanDetailLoader}
+            />
+            <Route element={<AuthRequired />}>
+            <Route path="host" element={<HostLayout />} >
+            <Route
+            index
+            element={<Dashboard />}
+            errorElement={<Error />}
+           loader={dashboardLoader}
+           />
             <Route path="income" element={<Income />} />
             <Route path="reviews" element={<Reviews />} />
-            <Route path="vans" >
+            <Route path="vans"
+             element={<HostVans />}
+             errorElement={<Error />}
+             loader={hostVansLoader}
+             />
+              <Route
+          path="vans/:id"
+          element={<HostVanDetails />}
+          errorElement={<Error />}
+          loader={hostVansDetailLoader}
+            >
+              <Route index element={<HostVanInfo />} />
               <Route index element={<HostVans />} />
-              <Route path=":id" element={<HostVansDetails />}>
-            </Route>
-            <Route index element={<HostVanInfo />} />
-            <Route path="pricing" element={<HostVanPricing  />} />
-            <Route path="photos" element={<HostVanPhotos />} />
+              <Route path="pricing" element={<HostVanPricing />} />
+              <Route path="photos" element={<HostVanPhotos />} />
             </Route>
           </Route>
         </Route>
-      </Routes>
-    </BrowserRouter>
-  );
+        <Route path="*" element={<NotFound />} />
+        </Route>
+   
+  ))
+      
+
+  function App() {
+    return (
+    <RouterProvider router={router} />
+  )
 }
