@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-
+import imageUrl from '../images/avatar-icon.png'
 export default function Header() {
   const activeStyles = {
     fontWeight: "bold",
@@ -8,9 +8,9 @@ export default function Header() {
     color: "#161616",
   };
 
-  // function fakeLogOut() {
-  //   localStorage.removeItem("loggedin");
-  // }
+  function fakeLogOut() {
+    localStorage.removeItem("loggedin");
+  }
   return (
     <header>
       <Link className="site-logo" to="/">
