@@ -1,14 +1,17 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+   Route } from "react-router-dom";
 import About from "./page/About";
 import Home from "./page/Home";
 import Vans from "./page/Vans";
 import VanDetail from "./page/VanDetail";
-import Dashboard from "./Host/dashboard";
+import Dashboard, { loader as vanDetailLoader } from "./Host/dashboard";
 import Income from "./Host/Income";
 import Reviews from "./Host/Reviews";
-import HostVans from "./Host/HostVans";
-import HostVansDetails from "./Host/HostVansDetails";
+import HostVans, { loader as hostVansLoader } from "./Host/HostVans";
+import HostVansDetails, { loader as vanDetailLoader } from "./Host/HostVansDetails";
 import HostVanInfo from "./Host/HostVanInfo";
 import HostVanPhotos from "./Host/HostVanPhotos";
 import HostVanPricing from "./Host/HostVanPricing";
@@ -34,7 +37,7 @@ const router = createBrowserRouter(createRoutesFromElements(
             element={<Vans />}
             errorElement={<Error />}
             loader={vansLoader}
-          >
+          />
             <Route
               path="vans:id"
               element={<VanDetail />}
@@ -56,12 +59,12 @@ const router = createBrowserRouter(createRoutesFromElements(
              errorElement={<Error />}
              loader={hostVansLoader}
              />
-              <Route
+             <Route
           path="vans/:id"
-          element={<HostVanDetails />}
+          element={<HostVansDetails />}
           errorElement={<Error />}
           loader={hostVansDetailLoader}
-            >
+        >
               <Route index element={<HostVanInfo />} />
               <Route index element={<HostVans />} />
               <Route path="pricing" element={<HostVanPricing />} />
@@ -70,12 +73,12 @@ const router = createBrowserRouter(createRoutesFromElements(
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
-        </Route>
+     </Route>
    
   ))
       
 
-  function App() {
+ export default function App() {
     return (
     <RouterProvider router={router} />
   )
