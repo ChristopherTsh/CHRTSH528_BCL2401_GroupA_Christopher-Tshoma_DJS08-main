@@ -1,73 +1,88 @@
-import React from "react";
-import { useParams, useLoaderData, Link, NavLink, Outlet, defer, Await} from "react-router-dom";
-import { getVan } from "../../api/firebase"
-
-export  function loader({ params }) {
-    return defer({ van: getVan(params.id) })
-}
+import React from "react"
+import { useParams, Link, NavLink, Outlet } from "react-router-dom"
+import { getVan } from "../../api"
 
 export default function HostVanDetail() {
-    const loaderData = useLoaderData()
+    const [currentVan, setCurrentVan] = React.useState(null)
+    const [loading, setLoading] = React.useState(false)
+    const [error, setError] = React.useState(null)
+    const { id } = useParams()
 
+    React.useEffect(() => {
+        async function loadVans() {
+            setLoading(true)
+            try {
+                const data = await getVan(id)
+                setCurrentVan(data)
+            } catch (err) {
+                setError(err)
+            } finally {
+                setLoading(false)
+            }
+        }
 
-  const activeStyles = {
-    fontWeight: "bold",
-    textDecoration: "underline",
-    color: "#161616",
-  };
+        loadVans()
+    }, [id])
 
-  return (
-    <section>
-      <Link 
-            to=".." 
-            relative="path" 
-            className="back-button">
-        &larr; <span>Back to all vans</span></Link>
-      <React.Suspense fallback={<h2>Loading...</h2>}>
-        <Await resolve={loaderData.van}></Await>
-    {(currentVan) => (
-      <div className="host-van-detail-layout-container">
-        <div className="host-van-detail">
-          <img src={currentVan.imageUrl} />
-          <div className="host-van-detail-info-text">
-            <i 
-                className={`van-type van-type-${currentVan.type}`}>
-              {currentVan.type}
-            </i>
-            <h3>{currentVan.name}</h3>
-            <h4>${currentVan.price}/day</h4>
-          </div>
-        </div>
+    if (loading) {
+        return <h1>Loading...</h1>
+    }
 
-        <nav className="host-van-detail-nav">
-          <NavLink
-            to="."
-            end
-            style={({ isActive }) => (isActive ? activeStyles : null)}
-          >
-            Details
-          </NavLink>
+    if (error) {
+        return <h1>There was an error: {error.message}</h1>
+    }
 
-          <NavLink
-            to="pricing"
-            style={({ isActive }) => (isActive ? activeStyles : null)}
-          >
-            Pricing
-          </NavLink>
+    const activeStyles = {
+        fontWeight: "bold",
+        textDecoration: "underline",
+        color: "#161616"
+    }
 
-          <NavLink
-            to="photos"
-            style={({ isActive }) => (isActive ? activeStyles : null)}
-          >
-            Photos
-          </NavLink>
-        </nav>
+    return (
+        <section>
+            <Link
+                to=".."
+                relative="path"
+                className="back-button"
+            >&larr; <span>Back to all vans</span></Link>
+            {currentVan &&
+                <div className="host-van-detail-layout-container">
+                    <div className="host-van-detail">
+                        <img src={currentVan.imageUrl} />
+                        <div className="host-van-detail-info-text">
+                            <i
+                                className={`van-type van-type-${currentVan.type}`}
+                            >
+                                {currentVan.type}
+                            </i>
+                            <h3>{currentVan.name}</h3>
+                            <h4>${currentVan.price}/day</h4>
+                        </div>
+                    </div>
 
-        <Outlet context={{ currentVan }} />
-      </div>
-      )}
-      </Await>
-  </React.Suspense>
-    </section>
-  
+                    <nav className="host-van-detail-nav">
+                        <NavLink
+                            to="."
+                            end
+                            style={({ isActive }) => isActive ? activeStyles : null}
+                        >
+                            Details
+                    </NavLink>
+                        <NavLink
+                            to="pricing"
+                            style={({ isActive }) => isActive ? activeStyles : null}
+                        >
+                            Pricing
+                    </NavLink>
+                        <NavLink
+                            to="photos"
+                            style={({ isActive }) => isActive ? activeStyles : null}
+                        >
+                            Photos
+                    </NavLink>
+                    </nav>
+                    <Outlet context={{ currentVan }} />
+                </div>}
+        </section>
     )
+}
