@@ -21,7 +21,7 @@ export default function HostVansDetails() {
   }
   return (
     <section>
-      <Link to="?" relative="path" className="back-button">
+      <Link to=".." relative="path" className="back-button">
         &larr; <span>Back to all vans</span>
       </Link>
       <div className="host-van-detail-layout-container">
@@ -60,7 +60,7 @@ export default function HostVansDetails() {
           </NavLink>
         </nav>
 
-        <Outlet  context={{ currentVan}} />
+        <Outlet context={{ currentVan }} />
       </div>
     </section>
   );
