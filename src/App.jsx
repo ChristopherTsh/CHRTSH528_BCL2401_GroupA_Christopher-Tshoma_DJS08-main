@@ -2,16 +2,17 @@ import React from "react";
 import { RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
-   Route } from "react-router-dom";
+   Route } 
+   from "react-router-dom";
 import About from "./page/About";
 import Home from "./page/Home";
-import Vans from "./page/Vans";
-import VanDetail from "./page/VanDetail";
-import Dashboard, { loader as vanDetailLoader } from "./Host/dashboard";
+import Vans, { loader as vansLoader } from "./page/Vans";
+import VanDetail, { loader as vanDetailLoader } from "./page/VanDetail";
+import Dashboard, { loader as dashboardLoader  } from "./Host/dashboard";
 import Income from "./Host/Income";
 import Reviews from "./Host/Reviews";
 import HostVans, { loader as hostVansLoader } from "./Host/HostVans";
-import HostVansDetails, { loader as vanDetailLoader } from "./Host/HostVansDetails";
+import HostVansDetails, { loader as hostVansDetailLoader } from "./Host/HostVansDetails";
 import HostVanInfo from "./Host/HostVanInfo";
 import HostVanPhotos from "./Host/HostVanPhotos";
 import HostVanPricing from "./Host/HostVanPricing";

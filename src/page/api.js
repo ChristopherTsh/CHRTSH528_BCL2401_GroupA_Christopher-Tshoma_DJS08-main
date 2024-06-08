@@ -1,33 +1,61 @@
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(() => resolve(), ms))
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getFirestore,
+    collection,
+    doc,
+    getDocs,
+    getDoc,
+    query,
+    where,
+    documentId
+ } from "firebase/firestore/lite"
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC_-0Awx6jhOgq09JH1DLRTVzSc2MsS-94",
+  authDomain: "vanlife-2e2a1.firebaseapp.com",
+  projectId: "vanlife-2e2a1",
+  storageBucket: "vanlife-2e2a1.appspot.com",
+  messagingSenderId: "226809208206",
+  appId: "1:226809208206:web:81717182ce1eb5628558df"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app)
+
+// Refactoring the fetching functions below
+const vansCollectionRef = collection(db, "vans")
+
+
+export async function getVans() {
+    const snapshot = await getDocs(vansCollectionRef)
+    const vans = snapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id
+    }))
+    return vans
 }
 
 export async function getVans(id) {
-    const url = id ? `/api/vans/${id}` : "/api/vans"
-    const res = await fetch(url)
-    if (!res.ok) {
-        throw {
-            message: "Failed to fetch vans",
-            statusText: res.statusText,
-            status: res.status
-        }
-    }
-    const data = await res.json()
-    return data.vans
+    const docRef = doc(db, "vans", id)
+    const snapshot = await getDoc(docRef)
+ 
+    return{
+        ...snapshot.data(),
+        id: snapshot.id
+
+    }  
 }
 
 export async function getHostVans(id) {
-    const url = id ? `/api/host/vans/${id}` : "/api/host/vans"
-    const res = await fetch(url)
-    if (!res.ok) {
-        throw {
-            message: "Failed to fetch vans",
-            statusText: res.statusText,
-            status: res.status
-        }
-    }
-    const data = await res.json()
-    return data.vans
+    const q = query(vansCollectionRef, where("hostId", "==", "123"))
+    const snapshot = await getDocs(q)
+    const vans = snapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id
+    }))
+    return vans
 }
 
 export async function loginUser(creds) {
