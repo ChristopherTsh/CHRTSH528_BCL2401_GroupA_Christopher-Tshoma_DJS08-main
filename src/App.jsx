@@ -16,7 +16,6 @@ import NotFound from "./page/NotFound";
 import Login  from "./page/Login";
 import Layout from "./components/Layout";
 import HostLayout from "./components/HostLayout";
-import Error from "./components/Error";
 import AuthRequired from "./components/AuthRequired";
 
 import "./server";
