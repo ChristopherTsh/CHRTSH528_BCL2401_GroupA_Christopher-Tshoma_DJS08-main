@@ -1,6 +1,7 @@
 import React from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { getVans } from "../page/api"
+
 export default function Vans() {
     const [searchParams, setSearchParams] = useSearchParams()
     const [vans, setVans] = React.useState([])
@@ -10,20 +11,20 @@ export default function Vans() {
     const typeFilter = searchParams.get("type")
 
     React.useEffect(() => {
-      async function loadVans() {
-        setLoading(true)
-        try {
-            const data = await getVans()
-            setVans(data)
-        } catch (err) {
-            setError(err)
-        } finally {
-            setLoading(false)
+        async function loadVans() {
+            setLoading(true)
+            try {
+                const data = await getVans()
+                setVans(data)
+            } catch (err) {
+                setError(err)
+            } finally {
+                setLoading(false)
+            }
         }
-    }
 
-    loadVans()
-}, [])
+        loadVans()
+    }, [])
 
     const displayedVans = typeFilter
         ? vans.filter(van => van.type === typeFilter)
@@ -31,7 +32,13 @@ export default function Vans() {
 
     const vanElements = displayedVans.map(van => (
         <div key={van.id} className="van-tile">
-            <Link to={van.id} state={{ search: searchParams.toString() }}>
+            <Link
+                to={van.id}
+                state={{
+                    search: `?${searchParams.toString()}`,
+                    type: typeFilter
+                }}
+            >
                 <img src={van.imageUrl} />
                 <div className="van-info">
                     <h3>{van.name}</h3>
@@ -43,23 +50,23 @@ export default function Vans() {
     ))
 
     function handleFilterChange(key, value) {
-      setSearchParams(prevParams => {
-        if (value === null) {
-            prevParams.delete(key)
-        } else {
-            prevParams.set(key, value)
-        }
-        return prevParams
-    })
-}
+        setSearchParams(prevParams => {
+            if (value === null) {
+                prevParams.delete(key)
+            } else {
+                prevParams.set(key, value)
+            }
+            return prevParams
+        })
+    }
 
-if (loading) {
-    return <h1>Loading...</h1>
-}
-
-if (error) {
-    return <h1>There was an error: {error.message}</h1>
-}
+    if (loading) {
+        return <h1>Loading...</h1>
+    }
+    
+    if (error) {
+        return <h1>There was an error: {error.message}</h1>
+    }
 
     return (
         <div className="van-list-container">
