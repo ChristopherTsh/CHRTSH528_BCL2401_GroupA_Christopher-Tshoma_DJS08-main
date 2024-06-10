@@ -8,7 +8,9 @@ export default function VanDetail() {
     React.useEffect(() => {
         fetch(`/api/vans/${params.id}`)
             .then(res => res.json())
-            .then(data => setVan(data.vans))
+            .then(data => {
+                console.log(data)
+                setVan(data.vans)})
     }, [params.id])
 
     return (
