@@ -99,3 +99,20 @@ export async function loginUser(creds) {
         throw error;
     }
 }
+
+export async function fetchVanData(vanId) {
+    try {
+        const docRef = doc(db, "vans", vanId);
+        const snapshot = await getDoc(docRef);
+
+        if (snapshot.exists()) {
+            return { ...snapshot.data(), id: snapshot.id };
+        } else {
+            console.error("No such document!");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching document:", error);
+        throw error;
+    }
+}

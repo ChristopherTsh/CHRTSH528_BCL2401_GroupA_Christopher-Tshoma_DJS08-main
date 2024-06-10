@@ -1,17 +1,26 @@
 import React from "react"
 import { Link, useParams } from "react-router-dom"
+import  {fetchVanData } from "../page/api"
+
 
 export default function VanDetail() {
-    const params = useParams()
+    const {id} = useParams()
     const [van, setVan] = React.useState(null)
 
     React.useEffect(() => {
-        fetch(`/api/vans/${params.id}`)
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                setVan(data.vans)})
-    }, [params.id])
+        async function fetchData() {
+            try {
+                const data = await fetchVanData(id);
+                if (data) {
+                    setVan(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch van data:", error);
+            }
+        }
+
+        fetchData();
+    }, [id]);
 
     return (
         <div className="van-detail-container">
